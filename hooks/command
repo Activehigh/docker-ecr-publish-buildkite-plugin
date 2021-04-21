@@ -48,8 +48,11 @@ read_caches_from() {
 
           cache="$(get_ecr_url "${image}" "${account_id}" "${region}"):${tag}"
           echo "${cache}"
-          docker pull "${cache}" || true
-          caches_from+=('--cache-from' "${cache}")
+          {
+            docker pull "${cache}"
+            caches_from+=('--cache-from' "${cache}")
+            break
+          } || true
 
         done
       fi
