@@ -47,9 +47,12 @@ read_caches_from() {
           ecr_login "$region" "$account_id"
 
           cache="$(get_ecr_url "${image}" "${account_id}" "${region}"):${tag}"
-
-          docker pull "${cache}" || true
-          caches_from+=('--cache-from' "${cache}")
+         
+          {
+            docker pull "${cache}"
+            caches_from+=('--cache-from' "${cache}")
+            break
+          } || true
 
         done
       fi
@@ -119,7 +122,7 @@ push_tags() {
     for tag in "${tags[@]}"; do
       echo "Tag: '${tag}'"
       docker tag "${BUILDKITE_PLUGIN_DOCKER_ECR_PUBLISH_ECR_NAME}" "${image}:${tag}"
-      docker push "${image}:${tag}"
+      docker push "${image}:${tag}" &
     done
 
   done
