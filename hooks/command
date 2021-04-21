@@ -47,12 +47,9 @@ read_caches_from() {
           ecr_login "$region" "$account_id"
 
           cache="$(get_ecr_url "${image}" "${account_id}" "${region}"):${tag}"
-          echo "${cache}"
-          {
-            docker pull "${cache}"
-            caches_from+=('--cache-from' "${cache}")
-            break
-          } || true
+
+          docker pull "${cache}" || true
+          caches_from+=('--cache-from' "${cache}")
 
         done
       fi
