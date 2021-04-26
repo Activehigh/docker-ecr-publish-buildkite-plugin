@@ -51,8 +51,12 @@ read_caches_from() {
           {
             docker pull "${cache}"
             caches_from+=('--cache-from' "${cache}")
+            echo "-- Cache found. Cancelling pull from other regions"
             break
-          } || true
+          } || {
+            echo "-- Cahe not found. Checking another region."
+            true
+          }
 
         done
       fi
