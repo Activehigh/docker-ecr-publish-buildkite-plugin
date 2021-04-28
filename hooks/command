@@ -54,6 +54,7 @@ read_caches_from() {
             caches_from+=('--cache-from' "${cache}")
             echo "-- Cache found. Cancelling pull from other regions"
             break
+          fi
         done
       fi
 
