@@ -46,18 +46,14 @@ read_caches_from() {
           echo "Logging in to ECR, region: ${region}"
           ecr_login "$region" "$account_id"
 
-          cache="$(get_ecr_url "${image}" "${account_id}" "${region}"):${tag}"
-         
-          {
-            docker pull "${cache}"
+          cache="$(get_ecr_url "${image}" "${account_id}" "${region}"):${tag}"        
+          
+          out=$(docker pull "${cache}")
+          # pull image only once from one region
+          if [[ $out == *"Image is up to date"* ]]; then
             caches_from+=('--cache-from' "${cache}")
             echo "-- Cache found. Cancelling pull from other regions"
             break
-          } || {
-            echo "-- Cache not found in ${region}. Checking another region."
-            true
-          }
-
         done
       fi
 
