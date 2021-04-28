@@ -54,7 +54,7 @@ read_caches_from() {
             echo "-- Cache found. Cancelling pull from other regions"
             break
           } || {
-            echo "-- Cahe not found. Checking another region."
+            echo "-- Cache not found in ${region}. Checking another region."
             true
           }
 
